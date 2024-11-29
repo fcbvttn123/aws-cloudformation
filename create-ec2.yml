@@ -1,0 +1,32 @@
+Parameters:
+  InstanceType:
+    Type: String
+    Default: "t2.micro"
+    Description: The EC2 instance type to launch (e.g., t2.micro, t3.small).
+
+  KeyName:
+    Type: AWS::EC2::KeyPair::KeyName
+    Description: Name of the existing key pair to allow SSH access.
+
+  AMIId:
+    Type: String
+    Description: AMI ID for the EC2 instances. (e.g., Amazon Linux 2 AMI)
+
+  SubnetId:
+    Type: String
+    Description: Subnet ID where the EC2 instance will be launched.
+
+Resources:
+  # Create EC2 Instance
+  EC2Instance:
+    Type: AWS::EC2::Instance
+    Properties:
+      InstanceType: !Ref InstanceType
+      KeyName: !Ref KeyName
+      SubnetId: !Ref SubnetId
+      SecurityGroupIds:
+        - !ImportValue SecurityGroupId
+      ImageId: !Ref AMIId
+      Tags:
+        - Key: Name
+          Value: "MyEC2Instance"
